@@ -28,7 +28,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50">
+    <div className="min-h-[80vh] lg:min-h-[90vh] bg-orange-50">
       {/* Header */}
       <header className="bg-gradient-to-r from-orange-500 via-red-500 to-orange-600 text-white sticky top-0 z-50 shadow-2xl">
         {/* Top bar */}
@@ -105,7 +105,7 @@ function App() {
                 🚚 ENVÍO GRATIS en tu primer pedido
               </div>
 
-              <h2 className="text-6xl lg:text-7xl xl:text-8xl font-black text-white mb-6 leading-none">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-6 leading-none">
                 HAMBRE?<br/>
                 <span className="text-yellow-300">NOSOTROS VAMOS!</span>
               </h2>
