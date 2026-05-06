@@ -1,0 +1,6 @@
+{
+  "name": "agencia-web-delivery-demo",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite"
+}
