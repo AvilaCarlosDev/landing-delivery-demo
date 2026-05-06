@@ -7,12 +7,12 @@ function App() {
   const images = {
     hero: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200&q=80',
     categorias: [
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800https://source.unsplash.com/random/500x500/?food,delivery&q=80q=80', // Hamburguesas
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800https://source.unsplash.com/random/500x500/?food,delivery&q=80q=80', // Pizza
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800https://source.unsplash.com/random/500x500/?food,delivery&q=80q=80', // Postres
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800https://source.unsplash.com/random/500x500/?food,delivery&q=80q=80', // BBQ
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800https://source.unsplash.com/random/500x500/?food,delivery&q=80q=80', // Pizza
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800https://source.unsplash.com/random/500x500/?food,delivery&q=80q=80', // Bebidas
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800', // Hamburguesas
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800', // Pizza
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800', // Postres
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800', // BBQ
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800', // Pizza
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800', // Bebidas
     ],
     productos: [
       { img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80', name: 'Hamburguesa Doble', price: '$8', time: '25 min' },
