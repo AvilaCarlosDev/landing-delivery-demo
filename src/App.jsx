@@ -16,10 +16,10 @@ function App() {
 
   const restaurantes = [
     { name: 'Burger King', rating: 4.8, time: '25-35 min', delivery: '$2', img: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500&q=80', promo: '2x1 en Whopper' },
-    { name: 'Domino's Pizza', rating: 4.6, time: '30-40 min', delivery: 'Gratis', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80', promo: 'Pizza mediana $8' },
+    { name: 'Dominos Pizza', rating: 4.6, time: '30-40 min', delivery: 'Gratis', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80', promo: 'Pizza mediana $8' },
     { name: 'KFC', rating: 4.5, time: '20-30 min', delivery: '$1.5', img: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=500&q=80', promo: 'Bucket familiar' },
     { name: 'Taco Bell', rating: 4.7, time: '25-35 min', delivery: '$2', img: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&q=80', promo: 'Tacos desde $1' },
-    { name: 'McDonald's', rating: 4.4, time: '15-25 min', delivery: '$1', img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&q=80', promo: 'Menu Big Mac' },
+    { name: 'McDonalds', rating: 4.4, time: '15-25 min', delivery: '$1', img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&q=80', promo: 'Menu Big Mac' },
     { name: 'Subway', rating: 4.6, time: '20-30 min', delivery: '$1.5', img: 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=500&q=80', promo: 'Sub de 30cm' },
   ]
 
