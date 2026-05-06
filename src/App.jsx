@@ -151,6 +151,30 @@ function App() {
                   <div className="aspect-[4/3] rounded-3xl overflow-hidden border-4 border-yellow-400/50 shadow-xl transform rotate-2">
                     <img src={images.categorias[1]} alt="Pizza" className="w-full h-full object-cover" />
                   </div>
+
+      {/* Social Proof - Stats */}
+      <section className="bg-orange-50 py-12 px-6 lg:px-12">
+        <div className="max-w-[1800px] mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl lg:text-5xl font-black text-orange-600 mb-2">+10K</div>
+              <div className="text-sm lg:text-base font-bold text-orange-800">Pedidos entregados</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl lg:text-5xl font-black text-orange-600 mb-2">4.9★</div>
+              <div className="text-sm lg:text-base font-bold text-orange-800">Calificación</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl lg:text-5xl font-black text-orange-600 mb-2">30min</div>
+              <div className="text-sm lg:text-base font-bold text-orange-800">Tiempo promedio</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl lg:text-5xl font-black text-orange-600 mb-2">100%</div>
+              <div className="text-sm lg:text-base font-bold text-orange-800">Zona de cobertura</div>
+            </div>
+          </div>
+        </div>
+      </section>
                 </div>
                 <div className="space-y-4 pt-12">
                   <div className="aspect-[4/3] rounded-3xl overflow-hidden border-4 border-white/50 shadow-xl transform rotate-3">
