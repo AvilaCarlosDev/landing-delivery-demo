@@ -11,7 +11,7 @@ const restaurants = [
     rating: '4.9',
     time: '22-32 min',
     delivery: '$1.5',
-    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900&q=85&fit=crop',
+    image: '/img/foto-155593959458d7.jpg',
     promo: 'Parrilla mixta -15%',
     dish: 'Pollo a la brasa + yuca',
     open: true,
@@ -22,7 +22,7 @@ const restaurants = [
     rating: '4.8',
     time: '18-28 min',
     delivery: '$1',
-    image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=900&q=85&fit=crop',
+    image: '/img/foto-15710917187671.jpg',
     promo: '2x1 Smash Tuesdays',
     dish: 'Smash doble + papas',
     open: true,
@@ -33,7 +33,7 @@ const restaurants = [
     rating: '4.7',
     time: '25-35 min',
     delivery: 'Gratis',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=900&q=85&fit=crop',
+    image: '/img/foto-15131048901387.jpg',
     promo: 'Pizza familiar $9',
     dish: 'Pepperoni artesanal',
     open: true,
@@ -44,7 +44,7 @@ const restaurants = [
     rating: '4.9',
     time: '30-45 min',
     delivery: '$2',
-    image: 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=900&q=85&fit=crop',
+    image: '/img/foto-1553621042f6e1.jpg',
     promo: 'Combo 24 piezas',
     dish: 'Roll acevichado',
     open: true,
@@ -55,7 +55,7 @@ const restaurants = [
     rating: '4.6',
     time: '20-30 min',
     delivery: '$1.2',
-    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=85&fit=crop',
+    image: '/img/foto-15404207734203.jpg',
     promo: 'Bowl + bebida',
     dish: 'Chicken quinoa bowl',
     open: true,
@@ -66,7 +66,7 @@ const restaurants = [
     rating: '4.8',
     time: '15-25 min',
     delivery: '$1',
-    image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=900&q=85&fit=crop',
+    image: '/img/foto-15510245060bcc.jpg',
     promo: 'Brownies 3x2',
     dish: 'Cheesecake de fresa',
     open: false,
@@ -212,7 +212,7 @@ function App() {
                 </div>
               </div>
               <div className="overflow-hidden rounded-[2.5rem] bg-white p-3 shadow-2xl shadow-orange-950/15">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1000&q=90&fit=crop" alt="Mesa con comida delivery" className="h-[520px] w-full rounded-[2rem] object-cover" />
+                <img src="/img/foto-15046749002470.jpg" alt="Mesa con comida delivery" className="h-[520px] w-full rounded-[2rem] object-cover" />
               </div>
             </div>
           </div>
