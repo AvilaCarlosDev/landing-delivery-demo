@@ -385,7 +385,8 @@ function App() {
           </div>
         </div>
         <div className="mx-auto mt-12 max-w-7xl border-t border-white/10 px-5 pt-7 text-center text-xs font-semibold text-white/30 lg:px-8">
-          © 2026 CraveNow. Demo creada por Carlos Avila - Developer 🇻🇪
+          © 2026 CraveNow. Demo creada por Carlos Avila - Developer 🇻🇪 ·{' '}
+          <a href="/privacidad/" className="underline underline-offset-2 hover:text-white/60">Privacidad</a>
         </div>
       </footer>
     </div>
