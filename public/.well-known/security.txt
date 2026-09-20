@@ -1,0 +1,4 @@
+Contact: mailto:avilavaleriocarlos@gmail.com
+Expires: 2027-09-20T00:00:00.000Z
+Preferred-Languages: es, en
+Canonical: https://agencia-web-delivery-demo.vercel.app/.well-known/security.txt
