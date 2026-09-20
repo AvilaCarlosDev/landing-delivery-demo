@@ -1,16 +1,60 @@
-# React + Vite
+# CraveNow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Landing de demostración: marketplace de delivery con restaurantes, combos, seguimiento de pedido y pedidos por WhatsApp.
 
-Currently, two official plugins are available:
+**Demo en vivo:** https://agencia-web-delivery-demo.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> Es una plantilla de demostración de [Carlos Avila](https://github.com/AvilaCarlosDev): el negocio, los precios y las cifras son de ejemplo. Sirve como base para adaptar una landing a un cliente real.
 
-## React Compiler
+## Qué incluye
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Diseño responsivo (móvil, tableta y escritorio) hecho con React y Tailwind.
+- Navegación por secciones con anclas y botones de contacto por WhatsApp.
+- Metadatos para buscadores y vista previa al compartir (`og:image` propia).
+- Imágenes alojadas dentro del proyecto (`public/img`): la landing no depende de servicios externos para mostrarse.
 
-## Expanding the ESLint configuration
+## Tecnología
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+React 19 · Vite 8 · Tailwind CSS 4 · Vitest + Testing Library · ESLint · Vercel
+
+## Cómo usarlo
+
+Requisitos: Node.js 22 o superior.
+
+```bash
+npm ci          # instala dependencias
+npm run dev     # servidor de desarrollo
+npm run lint    # revisión de código
+npm test        # pruebas
+npm run build   # build de producción en dist/
+```
+
+## Pruebas
+
+`src/App.test.jsx` protege la calidad del contenido. Comprueba que:
+
+- la página se renderiza sin errores;
+- no hay imágenes externas (sin enlaces directos a Unsplash u otros sitios) y todas las imágenes referenciadas existen en `public/`;
+- todas las imágenes tienen texto alternativo;
+- cada enlace `#ancla` apunta a una sección real;
+- los enlaces que abren pestaña nueva usan `rel="noopener"`;
+- no hay botones ni enlaces vacíos;
+- el título, la descripción y `og:image` (imagen propia en el dominio de la demo) están definidos.
+
+## Integración continua
+
+`.github/workflows/ci.yml` ejecuta lint, pruebas, build y auditoría de dependencias en cada push a `main` y en cada pull request.
+
+## Despliegue
+
+El proyecto se despliega en Vercel (`vercel.json`). Cada cambio en `main` publica una nueva versión.
+
+## Imágenes
+
+- Fotos de ambiente descargadas de [Unsplash](https://unsplash.com/license) y alojadas en `public/img/foto-*.jpg`.
+- Imágenes generadas con IA: ninguna.
+- `public/og.jpg` es la imagen de vista previa al compartir (1200×630).
+
+## Autor
+
+Carlos Avila · [GitHub](https://github.com/AvilaCarlosDev) · [LinkedIn](https://www.linkedin.com/in/avilacarlosdev)
