@@ -1,13 +1,14 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: /
-    schedule:
-      interval: monthly
+  # Dependabot mensual, agrupado en un solo PR y sin majors (evita ruido de alertas)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule: { interval: "monthly" }
+    open-pull-requests-limit: 1
+    labels: ["dependencies"]
+    commit-message: { prefix: "chore(deps)" }
     groups:
-      dev-dependencies:
-        dependency-type: development
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: monthly
+      all: { patterns: ["*"] }
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
