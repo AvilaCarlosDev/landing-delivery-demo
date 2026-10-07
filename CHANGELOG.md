@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed / Cambiado
+
+- README with real desktop and phone screenshots and CI, license and demo badges. / README con capturas reales de escritorio y teléfono y badges de CI, licencia y demo.
+
+## [1.0.0] - 2026-10-07
+
 ### Added / Añadido
 
 - SEO, security and privacy standard: canonical, Open Graph/Twitter with image, JSON-LD, robots, sitemap, manifest, icons, 404, `security.txt`, strict CSP and HTTP headers, privacy policy and self-hosted fonts. / Estándar de SEO, seguridad y privacidad: canonical, Open Graph/Twitter con imagen, JSON-LD, robots, sitemap, manifest, iconos, 404, `security.txt`, CSP estricta y cabeceras HTTP, política de privacidad y tipografías autoalojadas.
