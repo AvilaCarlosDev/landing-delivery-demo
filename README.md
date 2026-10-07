@@ -2,6 +2,10 @@
 
 [Español](README.md) · [English](README.en.md)
 
+[![CI](https://github.com/AvilaCarlosDev/landing-delivery-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/AvilaCarlosDev/landing-delivery-demo/actions/workflows/ci.yml) [![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-green.svg)](LICENSE) [![Demo en vivo](https://img.shields.io/badge/demo%20en%20vivo-Vercel-000?logo=vercel)](https://agencia-web-delivery-demo.vercel.app)
+
+<a href="https://agencia-web-delivery-demo.vercel.app"><img src="docs/portada.jpg" alt="CraveNow en la computadora y en el teléfono: portada con buscador, pedido activo y cupón" width="100%"></a>
+
 Landing de demostración: marketplace de delivery con restaurantes, combos, seguimiento de pedido y pedidos por WhatsApp.
 
 **Demo en vivo:** https://agencia-web-delivery-demo.vercel.app
