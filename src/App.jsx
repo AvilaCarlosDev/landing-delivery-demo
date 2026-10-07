@@ -1,6 +1,15 @@
 import { useMemo, useState } from 'react'
+import { MenuMovil, SaltarAlContenido } from './sitio.jsx'
+import { useSeccionActiva, wa } from './navegacion.js'
 
-const WHATSAPP_URL = 'https://wa.me/584120000000'
+const enlaces = [
+  ['restaurantes', 'Restaurantes'],
+  ['combos', 'Combos'],
+  ['tracking', 'Tracking'],
+  ['zonas', 'Zonas'],
+]
+
+const normalizar = (texto) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 const categories = ['Todos', 'Burgers', 'Pizza', 'Sushi', 'Criolla', 'Postres', 'Healthy']
 
@@ -105,55 +114,109 @@ const zones = ['Centro', 'Las Virtudes', 'Judibana', 'Puerta Maraven', 'Santa Ir
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('Todos')
-  const [cartCount, setCartCount] = useState(2)
+  const [busqueda, setBusqueda] = useState('')
+  const [direccion, setDireccion] = useState('')
+  const [pedido, setPedido] = useState([])
+  const activa = useSeccionActiva(enlaces.map(([id]) => id))
 
   const filteredRestaurants = useMemo(() => {
-    if (activeCategory === 'Todos') return restaurants
-    return restaurants.filter((restaurant) => restaurant.category === activeCategory)
-  }, [activeCategory])
+    const q = normalizar(busqueda.trim())
+    return restaurants.filter(
+      (restaurant) =>
+        (activeCategory === 'Todos' || restaurant.category === activeCategory) &&
+        (!q || normalizar(`${restaurant.name} ${restaurant.dish} ${restaurant.category}`).includes(q)),
+    )
+  }, [activeCategory, busqueda])
+
+  const agregar = (restaurant) => setPedido((actual) => [...actual, `${restaurant.dish} (${restaurant.name})`])
+
+  const mensajePedido = [
+    pedido.length ? `Hola, quiero pedir:\n${pedido.map((item) => `• ${item}`).join('\n')}` : 'Hola, quiero hacer un pedido.',
+    direccion.trim() && `Entregar en: ${direccion.trim()}`,
+  ]
+    .filter(Boolean)
+    .join('\n')
+
+  const verCategoria = (categoria) => {
+    setActiveCategory(categoria)
+    setBusqueda('')
+    document.getElementById('restaurantes')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const buscar = (event) => {
+    event.preventDefault()
+    setActiveCategory('Todos')
+    document.getElementById('restaurantes')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <div className="min-h-screen bg-[#fff8ef] text-[#23140f] antialiased">
-      <div className="bg-[#23140f] text-xs font-black uppercase tracking-[0.18em] text-orange-100/80">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-2 px-5 py-3 md:justify-between">
+      <SaltarAlContenido className="focus:rounded-full focus:bg-[#23140f] focus:text-white" />
+      <div className="bg-[#23140f] text-[11px] font-black uppercase tracking-[0.18em] text-orange-100/80">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-x-8 px-5 py-2.5 md:justify-between">
           <span>Delivery local en Punto Fijo</span>
-          <span>Restaurantes abiertos en tiempo real</span>
-          <span>Pedidos por WhatsApp</span>
+          <span className="hidden md:inline">Restaurantes abiertos en tiempo real</span>
+          <span className="hidden md:inline">Pedidos por WhatsApp</span>
         </div>
       </div>
 
       <header className="sticky top-0 z-50 border-b border-orange-100 bg-[#fff8ef]/90 backdrop-blur-xl">
         <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-5 lg:px-8">
-          <a href="#inicio" className="flex items-center gap-3" aria-label="CraveNow inicio">
-            <span className="grid h-12 w-12 place-items-center rounded-3xl bg-[#ff5a1f] text-xl font-black text-white shadow-xl shadow-orange-500/20">CN</span>
+          <a href="#inicio" className="flex shrink-0 items-center gap-3" aria-label="CraveNow inicio">
+            <span className="grid h-11 w-11 place-items-center sm:h-12 sm:w-12 rounded-3xl bg-[#ff5a1f] text-xl font-black text-white shadow-xl shadow-orange-500/20">CN</span>
             <span>
               <span className="block text-xl font-black tracking-tight">CraveNow</span>
               <span className="block text-[11px] font-black uppercase tracking-[0.2em] text-[#a15d42]">Food delivery</span>
             </span>
           </a>
 
-          <div className="hidden flex-1 items-center rounded-full border border-orange-100 bg-white px-4 py-2.5 shadow-sm lg:flex">
-            <span className="text-orange-500">⌕</span>
-            <input className="w-full bg-transparent px-3 text-sm font-semibold outline-none placeholder:text-[#b98972]" placeholder="Buscar sushi, hamburguesas, pizza..." />
-            <button className="rounded-full bg-[#23140f] px-5 py-2 text-xs font-black uppercase tracking-wide text-white transition hover:bg-[#ff5a1f]">
+          <form role="search" onSubmit={buscar} className="hidden flex-1 items-center rounded-full border border-orange-100 bg-white px-4 py-1.5 shadow-sm transition focus-within:border-[#ff5a1f] lg:flex">
+            <span aria-hidden="true" className="text-orange-500">⌕</span>
+            <input
+              type="search"
+              value={busqueda}
+              onChange={(event) => setBusqueda(event.target.value)}
+              aria-label="Buscar restaurante o plato"
+              className="w-full bg-transparent px-3 py-1 text-sm font-semibold outline-none placeholder:text-[#b98972]"
+              placeholder="Buscar sushi, hamburguesas, pizza..."
+            />
+            <button className="rounded-full bg-[#23140f] px-5 py-2 text-xs font-black uppercase tracking-wide text-white transition hover:bg-[#ff5a1f] active:scale-95">
               Buscar
             </button>
-          </div>
+          </form>
 
-          <nav className="hidden items-center gap-7 text-sm font-black text-[#81513d] lg:flex">
-            <a href="#restaurantes" className="transition hover:text-[#ff5a1f]">Restaurantes</a>
-            <a href="#combos" className="transition hover:text-[#ff5a1f]">Combos</a>
-            <a href="#tracking" className="transition hover:text-[#ff5a1f]">Tracking</a>
+          <nav aria-label="Principal" className="hidden items-center gap-6 text-sm font-black text-[#81513d] lg:flex">
+            {enlaces.map(([id, texto]) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                aria-current={activa === id ? 'true' : undefined}
+                className={`rounded-full px-3 py-1.5 transition hover:text-[#ff5a1f] ${activa === id ? 'bg-[#23140f] text-white hover:text-white' : ''}`}
+              >
+                {texto}
+              </a>
+            ))}
           </nav>
 
-          <button onClick={() => setCartCount((count) => count + 1)} className="relative ml-auto grid h-11 w-11 place-items-center rounded-full bg-[#23140f] text-white transition hover:bg-[#ff5a1f] lg:ml-0" aria-label="Carrito">
-            🛒
-            <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-[#ffd166] text-[10px] font-black text-[#23140f]">{cartCount}</span>
-          </button>
+          <a href={pedido.length ? '#tu-pedido' : '#restaurantes'} className="relative ml-auto grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#23140f] text-white transition hover:bg-[#ff5a1f] lg:ml-0" aria-label={`Tu pedido: ${pedido.length} productos`}>
+            <span aria-hidden="true">🛒</span>
+            {pedido.length > 0 && <span className="tabular absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#ffd166] px-1 text-[10px] font-black text-[#23140f]">{pedido.length}</span>}
+          </a>
+          <MenuMovil
+            enlaces={enlaces}
+            activa={activa}
+            cta={{ href: wa(mensajePedido), texto: 'Pedir por WhatsApp' }}
+            tono={{
+              boton: 'rounded-full border border-orange-200 bg-white text-[#23140f]',
+              panel: 'border-orange-100 bg-[#fff8ef] text-[#23140f]',
+              activo: 'text-[#ff5a1f]',
+              cta: 'rounded-full bg-[#ff5a1f] text-white',
+            }}
+          />
         </div>
       </header>
 
-      <main>
+      <main id="contenido">
         <section id="inicio" className="relative overflow-hidden">
           <div className="absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-orange-300/45 blur-3xl" />
           <div className="absolute right-[-8rem] top-36 h-80 w-80 rounded-full bg-yellow-200/70 blur-3xl" />
@@ -163,29 +226,36 @@ function App() {
               <div className="mb-7 inline-flex rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#ff5a1f] shadow-sm">
                 25-35 min promedio · entrega local
               </div>
-              <h1 className="text-balance text-6xl font-black leading-[0.9] tracking-[-0.07em] sm:text-7xl lg:text-8xl">
+              <h1 className="text-5xl font-extrabold leading-[0.92] tracking-[-0.045em] sm:text-7xl lg:text-8xl">
                 Tu antojo llega antes de que cambies de idea
               </h1>
               <p className="mt-7 max-w-xl text-lg leading-8 text-[#80513f] sm:text-xl">
-                Restaurantes locales, combos listos, tracking en vivo y pedidos rápidos por WhatsApp. Una experiencia tipo app para vender delivery de verdad.
+                Restaurantes de Punto Fijo, combos listos y tu pedido en camino con seguimiento. Escribe tu dirección y pide por WhatsApp.
               </p>
 
               <div className="mt-8 rounded-[2rem] border border-orange-100 bg-white p-3 shadow-2xl shadow-orange-950/10">
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <label className="flex min-h-14 flex-1 items-center gap-3 rounded-full bg-[#fff3e7] px-5">
-                    <span>📍</span>
-                    <input className="w-full bg-transparent text-sm font-bold outline-none placeholder:text-[#b98972]" placeholder="Ej: Av. Jacinto Lara, Punto Fijo" />
+                  <label className="flex min-h-14 flex-1 items-center gap-3 rounded-full bg-[#fff3e7] px-5 transition focus-within:ring-2 focus-within:ring-[#ff5a1f]">
+                    <span aria-hidden="true">📍</span>
+                    <span className="sr-only">Dirección de entrega</span>
+                    <input
+                      value={direccion}
+                      onChange={(event) => setDireccion(event.target.value)}
+                      autoComplete="street-address"
+                      className="w-full bg-transparent text-sm font-bold outline-none placeholder:text-[#b98972]"
+                      placeholder="Ej: Av. Jacinto Lara, Punto Fijo"
+                    />
                   </label>
-                  <a href={WHATSAPP_URL} className="inline-flex min-h-14 items-center justify-center rounded-full bg-[#ff5a1f] px-7 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f]">
+                  <a href={wa(mensajePedido)} className="inline-flex min-h-14 items-center justify-center rounded-full bg-[#ff5a1f] px-7 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f] active:scale-[.98]">
                     Pedir ahora
                   </a>
                 </div>
               </div>
 
               <div className="mt-10 flex flex-wrap gap-3">
-                {['🍔 Burgers', '🍕 Pizza', '🍣 Sushi', '🍰 Postres'].map((tag) => (
-                  <button key={tag} className="rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-black text-[#81513d] shadow-sm transition hover:border-[#ff5a1f] hover:text-[#ff5a1f]">
-                    {tag}
+                {[['🍔', 'Burgers'], ['🍕', 'Pizza'], ['🍣', 'Sushi'], ['🍰', 'Postres']].map(([icono, tag]) => (
+                  <button key={tag} type="button" onClick={() => verCategoria(tag)} className="rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-black text-[#81513d] shadow-sm transition hover:border-[#ff5a1f] hover:text-[#ff5a1f]">
+                    <span aria-hidden="true">{icono}</span> {tag}
                   </button>
                 ))}
               </div>
@@ -206,7 +276,7 @@ function App() {
                   </div>
                 </div>
                 <div className="rounded-[2rem] bg-[#ffd166] p-6 text-[#23140f] shadow-xl shadow-yellow-700/10">
-                  <p className="text-sm font-black uppercase tracking-[0.18em] opacity-70">Cupón demo</p>
+                  <p className="text-sm font-black uppercase tracking-[0.18em] opacity-70">Primer pedido</p>
                   <h3 className="mt-2 text-4xl font-black tracking-tight">CRAVE30</h3>
                   <p className="mt-3 text-sm font-bold opacity-70">30% OFF en tu primer pedido.</p>
                 </div>
@@ -218,11 +288,23 @@ function App() {
           </div>
         </section>
 
-        <section className="bg-white py-6">
-          <div className="mx-auto flex max-w-7xl gap-3 overflow-x-auto px-5 pb-2 lg:px-8">
+        <div className="sticky top-20 z-30 border-y border-orange-100 bg-white/90 py-3 backdrop-blur-xl">
+          <form role="search" onSubmit={buscar} className="mx-auto mb-3 max-w-7xl px-5 lg:hidden">
+            <input
+              type="search"
+              value={busqueda}
+              onChange={(event) => setBusqueda(event.target.value)}
+              aria-label="Buscar restaurante o plato"
+              className="w-full rounded-full border border-orange-100 bg-[#fff8ef] px-5 py-3 text-sm font-semibold outline-none transition placeholder:text-[#b98972] focus:border-[#ff5a1f]"
+              placeholder="⌕  Buscar sushi, pizza, postres..."
+            />
+          </form>
+          <div className="mx-auto flex max-w-7xl gap-3 overflow-x-auto px-5 pb-1 lg:px-8" role="group" aria-label="Filtrar por tipo de comida">
             {categories.map((category) => (
               <button
                 key={category}
+                type="button"
+                aria-pressed={activeCategory === category}
                 onClick={() => setActiveCategory(category)}
                 className={`shrink-0 rounded-full border px-5 py-2.5 text-sm font-black transition ${activeCategory === category ? 'border-[#23140f] bg-[#23140f] text-white' : 'border-orange-100 bg-[#fff8ef] text-[#81513d] hover:border-[#ff5a1f] hover:text-[#ff5a1f]'}`}
               >
@@ -230,18 +312,34 @@ function App() {
               </button>
             ))}
           </div>
-        </section>
+        </div>
 
-        <section id="restaurantes" className="bg-white py-24">
+        <section id="restaurantes" className="bg-white py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="mb-12 flex flex-col justify-between gap-5 md:flex-row md:items-end">
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff5a1f]">Restaurantes disponibles</p>
-                <h2 className="mt-3 text-5xl font-black tracking-[-0.055em] sm:text-6xl">Sabores listos para salir</h2>
+                <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-6xl">Sabores listos para salir</h2>
               </div>
-              <p className="max-w-md text-base leading-7 text-[#80513f]">Restaurantes ficticios con look real: tiempo, rating, promo, delivery y plato recomendado.</p>
+              <p className="max-w-md text-base leading-7 text-[#80513f]">
+                {busqueda.trim() ? (
+                  <>
+                    Resultados para «{busqueda.trim()}».{' '}
+                    <button type="button" onClick={() => setBusqueda('')} className="font-black text-[#ff5a1f] underline underline-offset-4">Ver todos</button>
+                  </>
+                ) : (
+                  'Tiempo de entrega, costo de envío y el plato que más se pide en cada local.'
+                )}
+              </p>
             </div>
 
+            {filteredRestaurants.length === 0 && (
+              <div className="rounded-[2rem] border border-dashed border-orange-200 bg-[#fff8ef] px-6 py-14 text-center">
+                <p className="text-2xl font-extrabold">Nada con ese nombre por ahora</p>
+                <p className="mx-auto mt-3 max-w-md text-sm font-semibold text-[#80513f]">Prueba con otro plato o escríbenos: si un local de la zona lo tiene, lo buscamos por ti.</p>
+                <button type="button" onClick={() => verCategoria('Todos')} className="mt-6 rounded-full bg-[#23140f] px-6 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f]">Ver todos los restaurantes</button>
+              </div>
+            )}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredRestaurants.map((restaurant) => (
                 <article key={restaurant.name} className="group overflow-hidden rounded-[2rem] border border-orange-100 bg-[#fff8ef] shadow-sm transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-950/10">
@@ -264,8 +362,13 @@ function App() {
                       <span>🕐 {restaurant.time}</span>
                       <span>🛵 {restaurant.delivery}</span>
                     </div>
-                    <button onClick={() => setCartCount((count) => count + 1)} className="mt-6 w-full rounded-full bg-[#ff5a1f] px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f]">
-                      Agregar al pedido
+                    <button
+                      type="button"
+                      disabled={!restaurant.open}
+                      onClick={() => agregar(restaurant)}
+                      className="mt-6 w-full rounded-full bg-[#ff5a1f] px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f] active:scale-[.98] disabled:cursor-not-allowed disabled:bg-orange-100 disabled:text-[#a15d42]"
+                    >
+                      {restaurant.open ? 'Agregar al pedido' : 'Abre a las 4:00 PM'}
                     </button>
                   </div>
                 </article>
@@ -278,7 +381,7 @@ function App() {
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="mx-auto mb-12 max-w-3xl text-center">
               <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff5a1f]">Combos inteligentes</p>
-              <h2 className="mt-3 text-5xl font-black tracking-[-0.055em] sm:text-6xl">Pedidos armados para momentos reales</h2>
+              <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-6xl">Pedidos armados para momentos reales</h2>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
               {combos.map((combo) => (
@@ -287,8 +390,8 @@ function App() {
                   <h3 className="mt-3 text-4xl font-black tracking-[-0.04em]">{combo.title}</h3>
                   <p className="mt-4 min-h-16 text-sm font-bold leading-6 text-[#80513f]">{combo.desc}</p>
                   <div className="mt-8 flex items-center justify-between gap-4">
-                    <strong className="text-3xl font-black">{combo.price}</strong>
-                    <a href={WHATSAPP_URL} className="rounded-full bg-[#23140f] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f]">
+                    <strong className="tabular text-3xl font-black">{combo.price}</strong>
+                    <a href={wa(`Hola, quiero el combo ${combo.title} (${combo.price}).`)} aria-label={`Pedir combo ${combo.title}`} className="rounded-full bg-[#23140f] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f] active:scale-95">
                       Pedir
                     </a>
                   </div>
@@ -302,10 +405,10 @@ function App() {
           <div className="mx-auto grid max-w-7xl overflow-hidden rounded-[2.5rem] bg-white/[0.05] lg:grid-cols-[.9fr_1.1fr]">
             <div className="p-8 sm:p-12 lg:p-16">
               <p className="text-sm font-black uppercase tracking-[0.24em] text-[#ffd166]">Tracking visual</p>
-              <h2 className="mt-4 max-w-2xl text-5xl font-black tracking-[-0.055em] sm:text-6xl">Que el cliente sienta control del pedido</h2>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-white/62">Una sección tipo app que muestra estado, rider asignado y tiempos estimados. Ideal para vender confianza.</p>
-              <a href={WHATSAPP_URL} className="mt-9 inline-flex rounded-full bg-[#ffd166] px-7 py-4 text-sm font-black uppercase tracking-wide text-[#23140f] transition hover:bg-white">
-                Probar pedido demo
+              <h2 className="mt-4 max-w-2xl text-4xl font-extrabold tracking-[-0.035em] sm:text-6xl">Sabes dónde va tu comida en cada momento</h2>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-white/62">Te avisamos cuando el local confirma, cuando sale el rider y cuántos minutos faltan. Sin llamar para preguntar.</p>
+              <a href={wa(mensajePedido)} className="mt-9 inline-flex rounded-full bg-[#ffd166] px-7 py-4 text-sm font-black uppercase tracking-wide text-[#23140f] transition hover:bg-white active:scale-[.98]">
+                Hacer mi pedido
               </a>
             </div>
             <div className="bg-[#fff8ef] p-6 text-[#23140f] sm:p-10">
@@ -336,17 +439,18 @@ function App() {
           </div>
         </section>
 
-        <section className="bg-white py-24">
+        <section id="zonas" className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-6 lg:grid-cols-[.8fr_1.2fr]">
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff5a1f]">Zonas de cobertura</p>
-                <h2 className="mt-3 text-5xl font-black tracking-[-0.055em]">Llegamos donde está el hambre</h2>
+                <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-5xl">Llegamos donde está el hambre</h2>
+                <p className="mt-5 max-w-sm text-base leading-7 text-[#80513f]">¿Tu zona no aparece? Escríbenos: abrimos rutas nuevas cada mes.</p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {zones.map((zone) => (
                   <div key={zone} className="rounded-[1.5rem] border border-orange-100 bg-[#fff8ef] px-5 py-4 font-black text-[#80513f]">
-                    📍 {zone}
+                    <span aria-hidden="true">📍</span> {zone}
                   </div>
                 ))}
               </div>
@@ -362,10 +466,10 @@ function App() {
               <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#ff5a1f] text-sm font-black text-white">CN</span>
               <div>
                 <span className="block text-lg font-black">CraveNow</span>
-                <span className="text-xs font-semibold text-white/45">Food delivery demo</span>
+                <span className="text-xs font-semibold text-white/45">Food delivery</span>
               </div>
             </div>
-            <p className="mt-5 max-w-md text-sm leading-6 text-white/50">Marketplace ficticio de delivery con restaurantes, combos, tracking, zonas y pedidos por WhatsApp.</p>
+            <p className="mt-5 max-w-md text-sm leading-6 text-white/50">Los restaurantes de Punto Fijo en un solo lugar: pides, sigues tu pedido y pagas al recibir.</p>
           </div>
           <div>
             <h3 className="text-sm font-black uppercase tracking-wide">Explorar</h3>
@@ -373,13 +477,14 @@ function App() {
               <li><a href="#restaurantes" className="hover:text-white">Restaurantes</a></li>
               <li><a href="#combos" className="hover:text-white">Combos</a></li>
               <li><a href="#tracking" className="hover:text-white">Tracking</a></li>
+              <li><a href="#zonas" className="hover:text-white">Zonas</a></li>
             </ul>
           </div>
           <div>
             <h3 className="text-sm font-black uppercase tracking-wide">Contacto</h3>
             <ul className="mt-5 space-y-3 text-sm font-semibold text-white/50">
               <li>Punto Fijo, Falcón</li>
-              <li><a href={WHATSAPP_URL} className="hover:text-white">WhatsApp: +58 412-000-0000</a></li>
+              <li><a href={wa()} className="hover:text-white">WhatsApp: +58 412-000-0000</a></li>
               <li>Horario: 10:00 AM - 11:00 PM</li>
             </ul>
           </div>
@@ -389,6 +494,23 @@ function App() {
           <a href="/privacidad/" className="underline underline-offset-2 hover:text-white/60">Privacidad</a>
         </div>
       </footer>
+
+      <aside
+        id="tu-pedido"
+        aria-label="Tu pedido"
+        className={`fixed inset-x-3 bottom-3 z-40 mx-auto max-w-xl rounded-[1.75rem] bg-[#23140f] p-3 pl-5 text-white shadow-2xl shadow-orange-950/30 transition duration-300 ${pedido.length ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'}`}
+      >
+        <div className="flex items-center gap-4">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ffd166]">Tu pedido · <span className="tabular">{pedido.length}</span></p>
+            <p className="truncate text-sm font-semibold text-white/70">{pedido.at(-1) ?? 'Vacío'}</p>
+          </div>
+          <button type="button" onClick={() => setPedido([])} className="text-xs font-bold text-white/50 underline-offset-4 transition hover:text-white hover:underline">Vaciar</button>
+          <a href={wa(mensajePedido)} className="shrink-0 rounded-full bg-[#ff5a1f] px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-[#23140f] active:scale-95">
+            Enviar
+          </a>
+        </div>
+      </aside>
     </div>
   )
 }
