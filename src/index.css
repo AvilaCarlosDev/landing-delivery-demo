@@ -133,10 +133,165 @@ body::after {
   }
 }
 
+@keyframes deriva-a {
+  from {
+    transform: translate3d(0, 80px, 0) scale(0.86);
+  }
+  to {
+    transform: translate3d(0, -80px, 0) scale(1.14);
+  }
+}
+@keyframes deriva-b {
+  from {
+    transform: translate3d(0, -70px, 0) scale(1.1);
+  }
+  to {
+    transform: translate3d(0, 90px, 0) scale(0.9);
+  }
+}
+@keyframes deriva-c {
+  from {
+    transform: translate3d(0, 40px, 0) scale(0.96);
+    opacity: 0.45;
+  }
+  to {
+    transform: translate3d(0, -40px, 0) scale(1.04);
+    opacity: 1;
+  }
+}
+@supports (animation-timeline: view()) {
+  .decoro-a,
+  .decoro-b,
+  .decoro-c {
+    animation: deriva-a linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+  .decoro-b {
+    animation-name: deriva-b;
+  }
+  .decoro-c {
+    animation-name: deriva-c;
+  }
+}
+
+.revela-oculto:not(.revela-lista) > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.3s ease;
+}
+.revela-oculto.revela-mascara:not(.revela-lista) > * {
+  clip-path: inset(0 0 100% 0);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.3s ease;
+}
+.revela-oculto:not(.revela-lista).revela-listo > * {
+  opacity: 1;
+  transform: none;
+}
+.revela-oculto.revela-mascara.revela-listo > * {
+  clip-path: inset(0 0 0 0);
+}
+.revela-oculto.revela-lista > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 75ms),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 75ms),
+    translate 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.3s ease;
+}
+.revela-oculto.revela-lista.revela-listo > * {
+  opacity: 1;
+  transform: none;
+}
+
+.cta {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.35s ease;
+}
+.cta:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 16px 30px -14px rgba(35, 20, 15, 0.55);
+}
+.cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.con-paralaje {
+  transform: translate3d(0, var(--paralaje, 0px), 0);
+}
+
+.pila {
+  --salto: 32px;
+}
+@media (min-width: 640px) {
+  .pila {
+    --salto: 56px;
+  }
+}
+.capa {
+  --lp: 1;
+  top: calc(var(--i, 0) * var(--salto, 56px));
+  z-index: calc(10 + var(--i, 0));
+}
+.escena-motion .capa {
+  --lp: clamp(0, calc((var(--p, 1) - var(--desde, 0)) / (var(--hasta, 1) - var(--desde, 0))), 1);
+  opacity: var(--lp);
+  transform:
+    translate3d(0, calc((1 - var(--lp)) * 44px), 0)
+    rotate(calc(var(--giro, 0deg) + (1 - var(--lp)) * 5deg)) scale(calc(0.95 + var(--lp) * 0.05));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ticker-pista,
   .entra,
-  .ruta-mapa {
+  .ruta-mapa,
+  .decoro-a,
+  .decoro-b,
+  .decoro-c {
     animation: none !important;
+  }
+  .revela-oculto,
+  .revela-oculto > * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+  .con-paralaje,
+  .escena-motion .capa {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .cta:not(:disabled):hover,
+  .cta:active {
+    transform: none !important;
   }
 }

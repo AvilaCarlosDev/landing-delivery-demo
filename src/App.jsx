@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import { MenuMovil, SaltarAlContenido } from './sitio.jsx'
 import { useSeccionActiva, wa } from './navegacion.js'
+import { useParalaje, useRevelar } from './motion.js'
+import ArmadoPedido from './armado.jsx'
+import { Contador } from './contador.jsx'
 
 const enlaces = [
   ['restaurantes', 'Restaurantes'],
@@ -110,6 +113,12 @@ const tracking = [
   ['Entrega próxima', 'Llegada estimada: 8 minutos'],
 ]
 
+const cifrasServicio = [
+  [48, 'Restaurantes aliados'],
+  [12500, 'Pedidos entregados'],
+  [28, 'Minutos de entrega'],
+]
+
 const zonasMapa = [
   ['Centro', 26, 30],
   ['Las Virtudes', 64, 20],
@@ -124,6 +133,16 @@ function App() {
   const [direccion, setDireccion] = useState('')
   const [pedido, setPedido] = useState([])
   const activa = useSeccionActiva(enlaces.map(([id]) => id))
+  const refFoto = useParalaje(40)
+  const refCabRest = useRevelar({ mascara: true })
+  const refGridRest = useRevelar({ lista: true })
+  const refCabCombos = useRevelar({ mascara: true })
+  const refGridCombos = useRevelar({ lista: true })
+  const refCabTracking = useRevelar({ mascara: true })
+  const refPasosTracking = useRevelar({ lista: true })
+  const refCabZonas = useRevelar({ mascara: true })
+  const refZonasMapa = useRevelar({ lista: true })
+  const refCifras = useRevelar({ lista: true })
 
   const filteredRestaurants = useMemo(() => {
     const q = normalizar(busqueda.trim())
@@ -225,7 +244,7 @@ function App() {
               boton: 'rounded-full border border-orange-200 bg-white text-[#23140f]',
               panel: 'border-orange-100 bg-[#fff8ef] text-[#23140f]',
               activo: 'text-[#ff5a1f]',
-              cta: 'rounded-full bg-[#ff5a1f] text-white',
+              cta: 'cta rounded-full bg-[#ff5a1f] text-white',
             }}
           />
         </div>
@@ -233,8 +252,8 @@ function App() {
 
       <main id="contenido">
         <section id="inicio" className="relative overflow-hidden">
-          <div className="absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-orange-300/45 blur-3xl" />
-          <div className="absolute right-[-8rem] top-36 h-80 w-80 rounded-full bg-yellow-200/70 blur-3xl" />
+          <div aria-hidden="true" className="decoro-a absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-orange-300/45 blur-3xl" />
+          <div aria-hidden="true" className="decoro-b absolute right-[-8rem] top-36 h-80 w-80 rounded-full bg-yellow-200/70 blur-3xl" />
 
           <div className="mx-auto grid min-h-[740px] max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-[.95fr_1.05fr] lg:px-8">
             <div className="relative z-10 max-w-2xl">
@@ -261,7 +280,7 @@ function App() {
                       placeholder="Ej: Av. Jacinto Lara, Punto Fijo"
                     />
                   </label>
-                  <a href={wa(mensajePedido)} className="inline-flex min-h-14 items-center justify-center rounded-full bg-[#ff5a1f] px-7 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f] active:scale-[.98]">
+                  <a href={wa(mensajePedido)} className="cta inline-flex min-h-14 items-center justify-center rounded-full bg-[#ff5a1f] px-7 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f] active:scale-[.98]">
                     Pedir ahora
                   </a>
                 </div>
@@ -297,7 +316,9 @@ function App() {
                 </div>
               </div>
               <div className="overflow-hidden rounded-[2.5rem] bg-white p-3 shadow-2xl shadow-orange-950/15">
-                <img src="/img/foto-15046749002470.jpg" alt="Mesa con comida delivery" className="h-[520px] w-full rounded-[2rem] object-cover" />
+                <div ref={refFoto} className="relative h-[520px] overflow-hidden rounded-[2rem] bg-orange-100">
+                  <img src="/img/foto-15046749002470.jpg" alt="Mesa con comida delivery" className="absolute inset-x-0 -top-[10%] h-[120%] w-full object-cover" />
+                </div>
               </div>
             </div>
           </div>
@@ -331,7 +352,7 @@ function App() {
 
         <section id="restaurantes" className="bg-white py-20 sm:py-24">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
-            <div className="mb-12 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div ref={refCabRest} className="mb-12 flex flex-col justify-between gap-5 md:flex-row md:items-end">
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff5a1f]">Restaurantes disponibles</p>
                 <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-6xl">Sabores listos para salir</h2>
@@ -355,9 +376,13 @@ function App() {
                 <button type="button" onClick={() => verCategoria('Todos')} className="mt-6 rounded-full bg-[#23140f] px-6 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f]">Ver todos los restaurantes</button>
               </div>
             )}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredRestaurants.map((restaurant) => (
-                <article key={restaurant.name} className="group overflow-hidden rounded-[2rem] border border-orange-100 bg-[#fff8ef] shadow-sm transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-950/10">
+            <div ref={refGridRest} className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {filteredRestaurants.map((restaurant, indice) => (
+                <article
+                  key={restaurant.name}
+                  style={{ '--i': String(indice) }}
+                  className="group overflow-hidden rounded-[2rem] border border-orange-100 bg-[#fff8ef] shadow-sm transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-950/10"
+                >
                   <div className="relative aspect-[4/3] overflow-hidden bg-orange-100">
                     <img src={restaurant.image} alt={restaurant.name} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -381,7 +406,7 @@ function App() {
                       type="button"
                       disabled={!restaurant.open}
                       onClick={() => agregar(restaurant)}
-                      className="mt-6 w-full rounded-full bg-[#ff5a1f] px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f] active:scale-[.98] disabled:cursor-not-allowed disabled:bg-orange-100 disabled:text-[#a15d42]"
+                      className="cta mt-6 w-full rounded-full bg-[#ff5a1f] px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#23140f] active:scale-[.98] disabled:cursor-not-allowed disabled:bg-orange-100 disabled:text-[#a15d42]"
                     >
                       {restaurant.open ? 'Agregar al pedido' : 'Abre a las 4:00 PM'}
                     </button>
@@ -392,19 +417,22 @@ function App() {
           </div>
         </section>
 
+        <ArmadoPedido />
+
         <section id="combos" className="py-24">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
-            <div className="mx-auto mb-12 max-w-3xl text-center">
+            <div ref={refCabCombos} className="mx-auto mb-12 max-w-3xl text-center">
               <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff5a1f]">Combos inteligentes</p>
               <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-6xl">Pedidos armados para momentos reales</h2>
             </div>
-            <div className="grid gap-6 md:grid-cols-6">
+            <div ref={refGridCombos} className="grid gap-6 md:grid-cols-6">
               {combos.map((combo, index) => {
                 const ancho = index === 0 ? 'md:col-span-4' : index === 1 ? 'md:col-span-2' : 'md:col-span-6'
                 const horizontal = index === 2
                 return (
                   <article
                     key={combo.title}
+                    style={{ '--i': String(index) }}
                     className={`${combo.accent} ${ancho} group rounded-[2rem] p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${horizontal ? 'flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-10' : ''}`}
                   >
                     <div className={horizontal ? 'md:flex-1' : ''}>
@@ -416,7 +444,7 @@ function App() {
                     </div>
                     <div className={`flex items-center justify-between gap-4 ${horizontal ? 'shrink-0 md:gap-8' : 'mt-8'}`}>
                       <strong className={`tabular font-black ${horizontal ? 'text-4xl' : 'text-3xl'}`}>{combo.price}</strong>
-                      <a href={wa(`Hola, quiero el combo ${combo.title} (${combo.price}).`)} aria-label={`Pedir combo ${combo.title}`} className="rounded-full bg-[#23140f] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f] active:scale-95">
+                      <a href={wa(`Hola, quiero el combo ${combo.title} (${combo.price}).`)} aria-label={`Pedir combo ${combo.title}`} className="cta rounded-full bg-[#23140f] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f] active:scale-95">
                         Pedir
                       </a>
                     </div>
@@ -427,13 +455,33 @@ function App() {
           </div>
         </section>
 
+        <section aria-label="Cifras del servicio" className="relative bg-[#ffd166] py-16 sm:py-20">
+          <span
+            aria-hidden="true"
+            className="decoro-c pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none text-center text-[15vw] font-black uppercase leading-none tracking-[-0.05em] text-transparent lg:text-[13vw]"
+            style={{ WebkitTextStroke: '1px rgba(35, 20, 15, 0.13)' }}
+          >
+            cravenow
+          </span>
+          <div ref={refCifras} className="relative mx-auto grid max-w-7xl gap-10 px-5 sm:grid-cols-3 lg:px-8">
+            {cifrasServicio.map(([valor, etiqueta], indice) => (
+              <div key={etiqueta} style={{ '--i': String(indice) }}>
+                <p className="text-5xl font-black tracking-[-0.05em] sm:text-6xl">
+                  <Contador valor={valor} />
+                </p>
+                <p className="mt-3 text-xs font-black uppercase tracking-[0.2em] text-[#23140f]/70">{etiqueta}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section id="tracking" className="bg-[#23140f] px-5 py-24 text-white lg:px-8">
           <div className="mx-auto grid max-w-7xl overflow-hidden rounded-[2.5rem] bg-white/[0.05] lg:grid-cols-[.9fr_1.1fr]">
-            <div className="p-8 sm:p-12 lg:p-16">
+            <div ref={refCabTracking} className="p-8 sm:p-12 lg:p-16">
               <p className="text-sm font-black uppercase tracking-[0.24em] text-[#ffd166]">Tracking visual</p>
               <h2 className="mt-4 max-w-2xl text-4xl font-extrabold tracking-[-0.035em] sm:text-6xl">Sabes dónde va tu comida en cada momento</h2>
               <p className="mt-6 max-w-xl text-lg leading-8 text-white/62">Te avisamos cuando el local confirma, cuando sale el rider y cuántos minutos faltan. Sin llamar para preguntar.</p>
-              <a href={wa(mensajePedido)} className="mt-9 inline-flex rounded-full bg-[#ffd166] px-7 py-4 text-sm font-black uppercase tracking-wide text-[#23140f] transition hover:bg-white active:scale-[.98]">
+              <a href={wa(mensajePedido)} className="cta mt-9 inline-flex rounded-full bg-[#ffd166] px-7 py-4 text-sm font-black uppercase tracking-wide text-[#23140f] transition hover:bg-white active:scale-[.98]">
                 Hacer mi pedido
               </a>
             </div>
@@ -446,9 +494,9 @@ function App() {
                   </div>
                   <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-black text-green-700">En curso</span>
                 </div>
-                <div className="space-y-4">
+                <div ref={refPasosTracking} className="space-y-4">
                   {tracking.map(([title, desc], index) => (
-                    <div key={title} className="flex gap-4">
+                    <div key={title} style={{ '--i': String(index) }} className="flex gap-4">
                       <div className="flex flex-col items-center">
                         <span className={`h-4 w-4 rounded-full ${index < 3 ? 'bg-[#ff5a1f]' : 'bg-orange-100'}`} />
                         {index < tracking.length - 1 && <span className="h-12 w-px bg-orange-100" />}
@@ -468,7 +516,7 @@ function App() {
         <section id="zonas" className="bg-white py-24">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-6 lg:grid-cols-[.8fr_1.2fr]">
-              <div>
+              <div ref={refCabZonas}>
                 <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff5a1f]">Zonas de cobertura</p>
                 <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-5xl">Llegamos donde está el hambre</h2>
                 <p className="mt-5 max-w-sm text-base leading-7 text-[#80513f]">¿Tu zona no aparece? Escríbenos: abrimos rutas nuevas cada mes.</p>
@@ -498,9 +546,13 @@ function App() {
                 <p className="absolute left-5 top-5 rounded-full bg-[#23140f] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-orange-100">
                   Cobertura activa
                 </p>
-                <ul className="absolute inset-0">
-                  {zonasMapa.map(([zona, x, y]) => (
-                    <li key={zona} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }}>
+                <ul ref={refZonasMapa} className="absolute inset-0">
+                  {zonasMapa.map(([zona, x, y], indice) => (
+                    <li
+                      key={zona}
+                      className="absolute -translate-x-1/2 -translate-y-1/2"
+                      style={{ left: `${x}%`, top: `${y}%`, '--i': String(indice) }}
+                    >
                       <span className="flex items-center gap-2 rounded-full border border-orange-100 bg-white px-3 py-1.5 text-xs font-black text-[#23140f] shadow-lg">
                         <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#ff5a1f] shadow-[0_0_0_3px_rgba(255,90,31,0.25)]" />
                         {zona}
@@ -561,7 +613,7 @@ function App() {
             <p className="truncate text-sm font-semibold text-white/70">{pedido.at(-1) ?? 'Vacío'}</p>
           </div>
           <button type="button" onClick={() => setPedido([])} className="text-xs font-bold text-white/50 underline-offset-4 transition hover:text-white hover:underline">Vaciar</button>
-          <a href={wa(mensajePedido)} className="shrink-0 rounded-full bg-[#ff5a1f] px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-[#23140f] active:scale-95">
+          <a href={wa(mensajePedido)} className="cta shrink-0 rounded-full bg-[#ff5a1f] px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-[#23140f] active:scale-95">
             Enviar
           </a>
         </div>
