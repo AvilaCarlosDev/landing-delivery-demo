@@ -110,7 +110,13 @@ const tracking = [
   ['Entrega próxima', 'Llegada estimada: 8 minutos'],
 ]
 
-const zones = ['Centro', 'Las Virtudes', 'Judibana', 'Puerta Maraven', 'Santa Irene']
+const zonasMapa = [
+  ['Centro', 26, 30],
+  ['Las Virtudes', 64, 20],
+  ['Judibana', 42, 60],
+  ['Puerta Maraven', 76, 54],
+  ['Santa Irene', 20, 80],
+]
 
 function App() {
   const [activeCategory, setActiveCategory] = useState('Todos')
@@ -152,11 +158,20 @@ function App() {
   return (
     <div className="min-h-screen bg-[#fff8ef] text-[#23140f] antialiased">
       <SaltarAlContenido className="focus:rounded-full focus:bg-[#23140f] focus:text-white" />
-      <div className="bg-[#23140f] text-[11px] font-black uppercase tracking-[0.18em] text-orange-100/80">
-        <div className="mx-auto flex max-w-7xl items-center justify-center gap-x-8 px-5 py-2.5 md:justify-between">
-          <span>Delivery local en Punto Fijo</span>
-          <span className="hidden md:inline">Restaurantes abiertos en tiempo real</span>
-          <span className="hidden md:inline">Pedidos por WhatsApp</span>
+      <div className="ticker border-b border-[#3a2419] bg-[#23140f] text-[11px] font-black uppercase tracking-[0.18em] text-orange-100/80">
+        <div className="ticker-pista py-2.5">
+          {[0, 1].map((copia) => (
+            <div key={copia} aria-hidden={copia === 1 || undefined} className="flex shrink-0 items-center gap-x-8 px-5">
+              <span>Delivery local en Punto Fijo</span>
+              <span aria-hidden="true" className="text-[#ff5a1f]">◆</span>
+              <span>Restaurantes abiertos en tiempo real</span>
+              <span aria-hidden="true" className="text-[#ff5a1f]">◆</span>
+              <span>Pedidos por WhatsApp</span>
+              <span aria-hidden="true" className="text-[#ff5a1f]">◆</span>
+              <span>Envío desde $1 en el centro</span>
+              <span aria-hidden="true" className="text-[#ff5a1f]">◆</span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -223,17 +238,17 @@ function App() {
 
           <div className="mx-auto grid min-h-[740px] max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-[.95fr_1.05fr] lg:px-8">
             <div className="relative z-10 max-w-2xl">
-              <div className="mb-7 inline-flex rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#ff5a1f] shadow-sm">
+              <div className="entra mb-7 inline-flex rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[#ff5a1f] shadow-sm">
                 25-35 min promedio · entrega local
               </div>
-              <h1 className="text-5xl font-extrabold leading-[0.92] tracking-[-0.045em] sm:text-7xl lg:text-8xl">
-                Tu antojo llega antes de que cambies de idea
+              <h1 className="entra text-5xl font-extrabold leading-[0.92] tracking-[-0.045em] sm:text-7xl lg:text-8xl" style={{ animationDelay: '70ms' }}>
+                Tu <span className="contorno-naranja">antojo</span> llega antes de que cambies de idea
               </h1>
-              <p className="mt-7 max-w-xl text-lg leading-8 text-[#80513f] sm:text-xl">
+              <p className="entra mt-7 max-w-xl text-lg leading-8 text-[#80513f] sm:text-xl" style={{ animationDelay: '150ms' }}>
                 Restaurantes de Punto Fijo, combos listos y tu pedido en camino con seguimiento. Escribe tu dirección y pide por WhatsApp.
               </p>
 
-              <div className="mt-8 rounded-[2rem] border border-orange-100 bg-white p-3 shadow-2xl shadow-orange-950/10">
+              <div className="entra mt-8 rounded-[2rem] border border-orange-100 bg-white p-3 shadow-2xl shadow-orange-950/10" style={{ animationDelay: '230ms' }}>
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <label className="flex min-h-14 flex-1 items-center gap-3 rounded-full bg-[#fff3e7] px-5 transition focus-within:ring-2 focus-within:ring-[#ff5a1f]">
                     <span aria-hidden="true">📍</span>
@@ -252,7 +267,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="mt-10 flex flex-wrap gap-3">
+              <div className="entra mt-10 flex flex-wrap gap-3" style={{ animationDelay: '310ms' }}>
                 {[['🍔', 'Burgers'], ['🍕', 'Pizza'], ['🍣', 'Sushi'], ['🍰', 'Postres']].map(([icono, tag]) => (
                   <button key={tag} type="button" onClick={() => verCategoria(tag)} className="rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-black text-[#81513d] shadow-sm transition hover:border-[#ff5a1f] hover:text-[#ff5a1f]">
                     <span aria-hidden="true">{icono}</span> {tag}
@@ -261,7 +276,7 @@ function App() {
               </div>
             </div>
 
-            <div className="relative z-10 grid gap-4 lg:grid-cols-[.9fr_1.1fr]">
+            <div className="entra relative z-10 grid gap-4 lg:grid-cols-[.9fr_1.1fr]" style={{ animationDelay: '200ms' }}>
               <div className="space-y-4 pt-16">
                 <div className="rounded-[2rem] bg-[#23140f] p-6 text-white shadow-2xl shadow-orange-950/20">
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-200/70">Pedido activo</p>
@@ -383,20 +398,31 @@ function App() {
               <p className="text-sm font-black uppercase tracking-[0.22em] text-[#ff5a1f]">Combos inteligentes</p>
               <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-6xl">Pedidos armados para momentos reales</h2>
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
-              {combos.map((combo) => (
-                <article key={combo.title} className={`${combo.accent} rounded-[2rem] p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl`}>
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-[#a15d42]">Combo</p>
-                  <h3 className="mt-3 text-4xl font-black tracking-[-0.04em]">{combo.title}</h3>
-                  <p className="mt-4 min-h-16 text-sm font-bold leading-6 text-[#80513f]">{combo.desc}</p>
-                  <div className="mt-8 flex items-center justify-between gap-4">
-                    <strong className="tabular text-3xl font-black">{combo.price}</strong>
-                    <a href={wa(`Hola, quiero el combo ${combo.title} (${combo.price}).`)} aria-label={`Pedir combo ${combo.title}`} className="rounded-full bg-[#23140f] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f] active:scale-95">
-                      Pedir
-                    </a>
-                  </div>
-                </article>
-              ))}
+            <div className="grid gap-6 md:grid-cols-6">
+              {combos.map((combo, index) => {
+                const ancho = index === 0 ? 'md:col-span-4' : index === 1 ? 'md:col-span-2' : 'md:col-span-6'
+                const horizontal = index === 2
+                return (
+                  <article
+                    key={combo.title}
+                    className={`${combo.accent} ${ancho} group rounded-[2rem] p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${horizontal ? 'flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-10' : ''}`}
+                  >
+                    <div className={horizontal ? 'md:flex-1' : ''}>
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-[#a15d42]">
+                        {index === 0 ? 'Combo · Más pedido' : 'Combo'}
+                      </p>
+                      <h3 className={`mt-3 font-black tracking-[-0.04em] ${horizontal ? 'text-3xl' : 'text-4xl'} ${index === 0 ? 'md:text-5xl' : ''}`}>{combo.title}</h3>
+                      <p className={`mt-4 text-sm font-bold leading-6 text-[#80513f] ${horizontal ? 'max-w-lg' : 'min-h-16'}`}>{combo.desc}</p>
+                    </div>
+                    <div className={`flex items-center justify-between gap-4 ${horizontal ? 'shrink-0 md:gap-8' : 'mt-8'}`}>
+                      <strong className={`tabular font-black ${horizontal ? 'text-4xl' : 'text-3xl'}`}>{combo.price}</strong>
+                      <a href={wa(`Hola, quiero el combo ${combo.title} (${combo.price}).`)} aria-label={`Pedir combo ${combo.title}`} className="rounded-full bg-[#23140f] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ff5a1f] active:scale-95">
+                        Pedir
+                      </a>
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           </div>
         </section>
@@ -447,12 +473,41 @@ function App() {
                 <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.035em] sm:text-5xl">Llegamos donde está el hambre</h2>
                 <p className="mt-5 max-w-sm text-base leading-7 text-[#80513f]">¿Tu zona no aparece? Escríbenos: abrimos rutas nuevas cada mes.</p>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {zones.map((zone) => (
-                  <div key={zone} className="rounded-[1.5rem] border border-orange-100 bg-[#fff8ef] px-5 py-4 font-black text-[#80513f]">
-                    <span aria-hidden="true">📍</span> {zone}
-                  </div>
-                ))}
+              <div className="relative aspect-[16/11] overflow-hidden rounded-[2rem] border border-orange-100 bg-[#fdf1e0] shadow-sm">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage:
+                      'repeating-linear-gradient(90deg, transparent 0 72px, #f3dfc4 72px 78px), repeating-linear-gradient(0deg, transparent 0 64px, #f3dfc4 64px 70px)',
+                  }}
+                />
+                <div aria-hidden="true" className="absolute -left-16 -top-16 h-56 w-56 rounded-full bg-orange-200/50 blur-2xl" />
+                <div aria-hidden="true" className="absolute -bottom-20 -right-10 h-64 w-64 rounded-full bg-yellow-100 blur-2xl" />
+                <svg aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+                  <path
+                    className="ruta-mapa"
+                    d="M10 78 C 30 62, 36 40, 54 46 S 78 52, 90 22"
+                    fill="none"
+                    stroke="#ff5a1f"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
+                <p className="absolute left-5 top-5 rounded-full bg-[#23140f] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-orange-100">
+                  Cobertura activa
+                </p>
+                <ul className="absolute inset-0">
+                  {zonasMapa.map(([zona, x, y]) => (
+                    <li key={zona} className="absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }}>
+                      <span className="flex items-center gap-2 rounded-full border border-orange-100 bg-white px-3 py-1.5 text-xs font-black text-[#23140f] shadow-lg">
+                        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#ff5a1f] shadow-[0_0_0_3px_rgba(255,90,31,0.25)]" />
+                        {zona}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
